@@ -17,23 +17,44 @@ class HomePageTest(TestCase):
         req.method = 'POST'
         req.POST['item_text'] = 'A new list Item'
         res = home_page(req)
-        self.assertIn('A new list Item',res.content.decode())
         expected_string = render_to_string(
                                     'home.html',
                                     {
                                         'new_item_text' : 'A new list Item'
                                     })
-        self.assertEqual(res.content.decode(), expected_string)
-        
-        
 
     def test_home_page_can_save_a_POST_request(self):
         req = HttpRequest()
         req.method = 'POST'
         req.POST['item_text'] = 'A new list Item'
-
         res = home_page(req)
-        self.assertIn('A new list Item',res.content.decode())
+        
+        self.assertEqual(Item.objects.count(),1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text,'A new list Item')
+    
+    def test_home_page_redirects_after_POST(self):
+        req = HttpRequest()
+        req.method = 'POST'
+        req.POST['item_text'] = 'A new list Item'
+        res = home_page(req)
+        self.assertEqual(res.status_code,302)
+        self.assertEqual(res['location'],'/')
+    def test_home_page_only_saves_item_when_necessary(self):
+        req = HttpRequest()
+        res = home_page(req)
+        self.assertEqual(Item.objects.count(),0)
+    def test_home_page_displays_all_list_items(self):
+        i1 = Item.objects.create(text='item says 1')
+        i2 = Item.objects.create(text='item says 2')
+
+        req =  HttpRequest()
+        res = home_page(req)
+
+        self.assertIn('item says 1', res.content.decode())
+        self.assertIn('item says 2', res.content.decode())
+
+
 
 class ItemModelTest(TestCase):
     def test_saving_and_retrieving_items(self):

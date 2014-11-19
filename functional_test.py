@@ -18,6 +18,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         self.browser.get('localhost:8000')
+        self.browser.implicitly_wait(10)
         self.assertIn('To-Do',self.browser.title)
         headerText = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do',headerText)
@@ -35,7 +36,7 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys(Keys.ENTER)
 
         self.check_for_row_in_list_table('1: Buy Peacock Feathers')
-        self.check_for_row_in_list_table('2: Use Peacock Feather to make a fly')
+        self.check_for_row_in_list_table('2: Use Peacock Feathers to make a fly')
 
         self.fail('Finish the test')
 
