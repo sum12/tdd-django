@@ -13,7 +13,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def check_for_row_in_list_table(self, row_text):
         table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_taag_name('tr')
+        rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
     def test_can_start_a_list_and_retrieve_it_later(self):
@@ -38,6 +38,8 @@ class NewVisitorTest(unittest.TestCase):
         self.check_for_row_in_list_table('2: Use Peacock Feather to make a fly')
 
         self.fail('Finish the test')
+
+
 
 
 if __name__== '__main__':
