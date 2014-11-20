@@ -23,24 +23,6 @@ class HomePageTest(TestCase):
                                         'new_item_text' : 'A new list Item'
                                     })
 
-    def test_home_page_can_save_a_POST_request(self):
-        req = HttpRequest()
-        req.method = 'POST'
-        req.POST['item_text'] = 'A new list Item'
-        res = home_page(req)
-        
-        self.assertEqual(Item.objects.count(),1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text,'A new list Item')
-    
-    def test_home_page_redirects_after_POST(self):
-        req = HttpRequest()
-        req.method = 'POST'
-        req.POST['item_text'] = 'A new list Item'
-        res = home_page(req)
-        self.assertEqual(res.status_code,302)
-        self.assertEqual(res['location'],'/lists/the-only-list-in-the-world/')
-
     def test_home_page_only_saves_item_when_necessary(self):
         req = HttpRequest()
         res = home_page(req)
@@ -81,4 +63,20 @@ class ListViewTest(TestCase):
         self.assertContains(res,'item says 1')
         self.assertContains(res, 'item says 2')
 
+class NewListTest(TestCase):
+    def test_saving_a_POST_request(self):
+        self.client.post(
+                '/lists/new',
+                data = {'item_text' : 'A new list Item'}
+                )
+        self.assertEqual(Item.objects.count(),1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text,'A new list Item')
+    
+    def test_redirects_after_POST(self):
+        res = self.client.post(
+                '/lists/new',
+                data = {'item_text' : 'A new list Item'}
+                )
+        self.assertRedirects(res,'/lists/the-only-list-in-the-world/')
 

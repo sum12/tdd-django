@@ -3,7 +3,7 @@
 
     <h1> start a new  To-Do lists</h1>
     
-    <form method="POST" action="/">
+    <form method="POST" action="/list/new">
         <input name="item_text" id="id_new_item" placeholder="Enter a new To-Do Item"/>
         {% csrf_token %}
     </form>
