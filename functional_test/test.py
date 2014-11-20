@@ -19,7 +19,7 @@ class NewVisitorTest(LiveServerTestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         self.browser.get(self.live_server_url)
-        self.browser.implicitly_wait(10)
+        self.browser.implicitly_wait(5)
         self.assertIn('To-Do',self.browser.title)
         headerText = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do',headerText)
@@ -34,13 +34,11 @@ class NewVisitorTest(LiveServerTestCase):
 
         url1 = self.browser.current_url
         self.assertRegexpMatches(url1,'/lists/.+')
-        '''
         input_box = self.browser.find_element_by_id('id_new_item')
         input_box.send_keys('Use Peacock Feathers to make a fly')
         input_box.send_keys(Keys.ENTER)
-        '''
         self.check_for_row_in_list_table('1: Buy Peacock Feathers')
-        #self.check_for_row_in_list_table('2: Use Peacock Feathers to make a fly')
+        self.check_for_row_in_list_table('2: Use Peacock Feathers to make a fly')
 
         ## test to check that browser is not servering list from cookies
 
@@ -48,7 +46,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
         self.browser.get(self.live_server_url)
 
-        body_text =  self.browser.find_element_tag_name('body').text
+        body_text =  self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy Peacock Feather',body_text)
         self.assertNotIn('Buy Milk',body_text)
 
@@ -61,7 +59,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotEqual(url1,url2)
         self.assertRegexpMatches(url2,'/lists/.+')
 
-        body_text =  self.browser.find_element_tag_name('body').text
+        body_text =  self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy Peacock Feather',body_text)
         self.assertIn('Buy Milk',body_text)
 
