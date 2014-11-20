@@ -32,12 +32,38 @@ class NewVisitorTest(LiveServerTestCase):
         input_box.send_keys('Buy Peacock Feathers')
         input_box.send_keys(Keys.ENTER)
 
+        url1 = self.browser.current_url
+        self.assertRegexpMatches(url1,'/lists/.+')
+        '''
         input_box = self.browser.find_element_by_id('id_new_item')
         input_box.send_keys('Use Peacock Feathers to make a fly')
         input_box.send_keys(Keys.ENTER)
-
+        '''
         self.check_for_row_in_list_table('1: Buy Peacock Feathers')
-        self.check_for_row_in_list_table('2: Use Peacock Feathers to make a fly')
+        #self.check_for_row_in_list_table('2: Use Peacock Feathers to make a fly')
+
+        ## test to check that browser is not servering list from cookies
+
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+        self.browser.get(self.live_server_url)
+
+        body_text =  self.browser.find_element_tag_name('body').text
+        self.assertNotIn('Buy Peacock Feather',body_text)
+        self.assertNotIn('Buy Milk',body_text)
+
+        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box.send_keys('Buy Milk')
+        input_box.send_keys(Keys.ENTER)
+
+        url2 = self.browser.current_url
+
+        self.assertNotEqual(url1,url2)
+        self.assertRegexpMatches(url2,'/lists/.+')
+
+        body_text =  self.browser.find_element_tag_name('body').text
+        self.assertNotIn('Buy Peacock Feather',body_text)
+        self.assertIn('Buy Milk',body_text)
 
         self.fail('Finish the test')
 
