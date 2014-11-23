@@ -1,10 +1,10 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys  import  Keys
 
 import unittest
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(5)
@@ -28,11 +28,6 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertEqual(
                     input_box.get_attribute('placeholder'),
                     'Enter a new To-Do Item'
-                )
-        self.assertAlmostEqual(
-                input_box.location['x'] + input_box.size['width'] / 2,
-                512,
-                delta=5
                 )
         input_box.send_keys('Buy Peacock Feathers')
         input_box.send_keys(Keys.ENTER)
