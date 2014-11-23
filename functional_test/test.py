@@ -29,6 +29,11 @@ class NewVisitorTest(LiveServerTestCase):
                     input_box.get_attribute('placeholder'),
                     'Enter a new To-Do Item'
                 )
+        self.assertAlmostEqual(
+                input_box.location['x'] + input_box.size['width'] / 2,
+                512,
+                delta=5
+                )
         input_box.send_keys('Buy Peacock Feathers')
         input_box.send_keys(Keys.ENTER)
 
